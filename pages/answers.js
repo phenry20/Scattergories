@@ -1,15 +1,29 @@
-import React from "react";
-import { useCollection } from "react-firebase-hooks/firestore";
+import React, { useEffect } from "react";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import firebase from "firebase";
 import { useRouter } from "next/router";
+import useModerator from "../hooks/useModerator";
 
 export default function Answers() {
     const [users, usersLoading] = useCollection(firebase.firestore().collection("/users"));
     const [topics, topicsLoading] = useCollection(firebase.firestore().collection("/topics"));
+    const [state, stateLoading] = useDocument(firebase.firestore().doc("/app/state"));
+    const { isModerator } = useModerator();
     const router = useRouter();
+
+    useEffect(() => {
+        if (stateLoading) {
+            return;
+        }
+
+        if (state.data().state === "lobby") {
+            router.push("/lobby");
+        }
+    }, [state]);
 
     function onStartRoundClick() {
         router.push("/setup");
+        firebase.firestore().doc("app/state").set({ state: "lobby" }, { merge: true });
     }
 
     return (
@@ -43,9 +57,14 @@ export default function Answers() {
                 </table>
             </div>
 
-            <button className="btn btn-success btn-lg w-50 align-self-center mb-30" onClick={() => onStartRoundClick()}>
-                Start New Round
-            </button>
+            {isModerator && (
+                <button
+                    className="btn btn-success btn-lg w-50 align-self-center mb-30"
+                    onClick={() => onStartRoundClick()}
+                >
+                    Start New Round
+                </button>
+            )}
         </div>
     );
 }

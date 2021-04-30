@@ -1,11 +1,14 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import firebase from "firebase";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import useModerator from "../hooks/useModerator";
 
 export default function Lobby() {
     const [users, usersLoading] = useCollection(firebase.firestore().collection("/users"));
     const [state, stateLoading] = useDocument(firebase.firestore().doc("/app/state"));
+    const { isModerator } = useModerator();
+
     const router = useRouter();
 
     useEffect(() => {
@@ -34,9 +37,14 @@ export default function Lobby() {
                     ))}
             </div>
 
-            <button className="btn btn-success btn-lg w-50 align-self-center mb-30" onClick={() => onStartGameClick()}>
-                Start Game
-            </button>
+            {isModerator && (
+                <button
+                    className="btn btn-success btn-lg w-50 align-self-center mb-30"
+                    onClick={() => onStartGameClick()}
+                >
+                    Start Game
+                </button>
+            )}
         </div>
     );
 }

@@ -60,7 +60,7 @@ export default function Game() {
                 <button
                     type="submit"
                     className="btn btn-lg btn-success btn-block mt-10"
-                    //disabled={!formState.isValid || stateLoading || state.data().state === "answers"}
+                    disabled={!formState.isValid || stateLoading || state.data().state === "answers"}
                 >
                     DONE
                 </button>
