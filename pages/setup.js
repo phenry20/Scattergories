@@ -103,9 +103,7 @@ export default function Setup() {
 
                 <div>
                     <p>Topics</p>
-                    {topics?.map((topic) => (
-                        <p key={topic}>{topic}</p>
-                    ))}
+                    TOPICS SET!
                 </div>
 
                 <button type="input" className="btn btn-success btn-lg" onClick={() => setupGame()}>

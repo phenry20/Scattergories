@@ -4,9 +4,11 @@ import firebase from "firebase";
 import classNames from "classnames";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import useModerator from "../hooks/useModerator";
 
 export default function Home() {
     const { handleSubmit, register, formState } = useForm({ mode: "onChange" });
+    const { isModerator } = useModerator();
     const router = useRouter();
 
     async function onSubmit(data) {
@@ -66,13 +68,6 @@ export default function Home() {
                         Join Lobby
                     </button>
                 </form>
-
-                <button
-                    className="btn btn-success btn-lg w-50 align-self-center mb-30"
-                    onClick={() => onStartGameClick()}
-                >
-                    Start Game
-                </button>
             </main>
         </>
     );

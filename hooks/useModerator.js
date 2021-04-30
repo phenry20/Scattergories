@@ -11,9 +11,10 @@ export default function useModerator() {
             return;
         }
 
-        if (users.docs.some((user) => user.data().moderator)) {
-            setIsModerator(true);
-        }
+        const name = localStorage.getItem("name");
+        const user = users.docs.find((x) => x.id === name);
+
+        setIsModerator(user?.data()?.moderator);
     }, [users]);
 
     return { isModerator };
