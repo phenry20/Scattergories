@@ -43,7 +43,7 @@ export default function Game() {
                             <label className="font-size-h6 font-weight-bolder">{topic.data().text}</label>
                             <input
                                 ref={register({
-                                    required: false,
+                                    required: true,
                                     pattern: {
                                         value: ".+",
                                         message: "Must add a value",
