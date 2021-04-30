@@ -4,7 +4,6 @@ import firebase from "firebase";
 import classNames from "classnames";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import React from "react";
 
 export default function Home() {
     const { handleSubmit, register, formState } = useForm({ mode: "onChange" });
@@ -19,6 +18,7 @@ export default function Home() {
             { merge: true }
         );
 
+        localStorage.setItem("name", data.name);
         router.push("/lobby");
     }
 

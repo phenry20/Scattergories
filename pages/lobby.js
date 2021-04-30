@@ -1,11 +1,22 @@
-import { useCollection } from "react-firebase-hooks/firestore";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import firebase from "firebase";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function Lobby() {
     const [users, usersLoading] = useCollection(firebase.firestore().collection("/users"));
+    const [state, stateLoading] = useDocument(firebase.firestore().doc("/app/state"));
     const router = useRouter();
+
+    useEffect(() => {
+        if (stateLoading) {
+            return;
+        }
+
+        if (state.data().state === "game") {
+            router.push("/game");
+        }
+    }, [state]);
 
     function onStartGameClick() {
         router.push("/setup");

@@ -2,10 +2,24 @@ import { useState, useEffect } from "react";
 import { Categories } from "../enum/categories";
 import styles from "../styles/Home.module.css";
 import firebase from "firebase";
+import { useDocument } from "react-firebase-hooks/firestore";
+import { useRouter } from "next/router";
 
 export default function Setup() {
     const [letter, setLetter] = useState("");
     const [topics, setTopics] = useState([]);
+    const [state, stateLoading] = useDocument(firebase.firestore().doc("/app/state"));
+    const router = useRouter();
+
+    useEffect(() => {
+        if (stateLoading) {
+            return;
+        }
+
+        if (state.data().state === "game") {
+            router.push("/game");
+        }
+    }, [state]);
 
     useEffect(() => {
         const batch = firebase.firestore().batch();
@@ -68,6 +82,10 @@ export default function Setup() {
         assignTopics();
     }
 
+    function startGame() {
+        firebase.firestore().doc("app/state").set({ state: "game" }, { merge: true });
+    }
+
     return (
         <main className="p-10" id="__layout">
             <h1 className={styles.title}>Setup Game</h1>
@@ -92,6 +110,10 @@ export default function Setup() {
 
                 <button type="input" className="btn btn-success btn-lg" onClick={() => setupGame()}>
                     Setup Game!
+                </button>
+
+                <button type="input" className="btn btn-success btn-lg" onClick={() => startGame()}>
+                    Start Game
                 </button>
             </div>
         </main>
