@@ -1,13 +1,23 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import Image from "next/image";
+import firebase from "firebase";
+import classNames from "classnames";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
 
 export default function Home() {
-    const { handleSubmit } = useForm();
+    const { handleSubmit, register, formState } = useForm({ mode: "onChange" });
+    const router = useRouter();
 
-    function onSubmit(data) {
-        console.log("DATA:", data);
+    async function onSubmit(data) {
+        await firebase.firestore().doc(`/users/${data.name}`).set(
+            {
+                name: data.name,
+            },
+            { merge: true }
+        );
+
+        router.push("/lobby");
     }
 
     return (
@@ -23,25 +33,37 @@ export default function Home() {
                     Welcome to <a href="https://nextjs.org">Scattergories!</a>
                 </h1>
 
-                <div className="h-100">
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className="d-flex flex-column align-items-center justify-content-center h-100 w-100"
-                    >
-                        <div className="w-100 p-40">
-                            <label className="font-size-h6 font-weight-bolder">Display Name</label>
-                            <input
-                                type="name"
-                                className="form-control form-control-solid h-auto rounded-lg font-size-h6 py-7 px-6"
-                                placeholder="Enter your name"
-                            />
-                        </div>
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="d-flex flex-column align-items-center justify-content-center h-100 w-100"
+                >
+                    <div className="w-100 p-40">
+                        <label className="font-size-h6 font-weight-bolder">Display Name</label>
+                        <input
+                            ref={register({
+                                required: true,
+                                pattern: {
+                                    value: ".+",
+                                    message: "Must add a name",
+                                },
+                            })}
+                            name="name"
+                            type="name"
+                            className="form-control form-control-solid h-auto rounded-lg font-size-h6 py-7 px-6"
+                            placeholder="Enter your name"
+                        />
+                    </div>
 
-                        <button type="submit" className="btn btn-success btn-lg">
-                            Join Lobby
-                        </button>
-                    </form>
-                </div>
+                    <button
+                        type="submit"
+                        className={classNames("btn btn-success btn-lg ", {
+                            "spinner spinner-left": formState.isSubmitting,
+                        })}
+                        disabled={!formState.isValid}
+                    >
+                        Join Lobby
+                    </button>
+                </form>
             </main>
         </>
     );
