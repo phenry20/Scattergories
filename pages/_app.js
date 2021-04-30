@@ -1,6 +1,16 @@
-import "../styles/globals.css";
+//import "../styles/globals.css";
 import Head from "next/head";
 import firebase from "firebase";
+import "../_styles/css/plugins.bundle.css";
+import "../_styles/css/wizard-6.css";
+import "../_styles/css/themes/layout/header/base/light.min.css";
+import "../_styles/css/themes/layout/header/menu/light.min.css";
+import "../_styles/css/login-1.min.css";
+import "../_styles/css/login-3.min.css";
+import "../_styles/vendor/font-awesome/css/all.min.css";
+import "../_styles/fonts/boxicons/css/boxicons.min.css";
+import "../styles/globals.scss";
+//import "../styles/animations.scss";
 
 const firebaseConfig = {
     apiKey: "AIzaSyApiramAxrtYlJCUV3dg-VaoJ6qJca007w",
@@ -11,7 +21,10 @@ const firebaseConfig = {
     appId: "1:978777798914:web:738581fba9bf2e5646ea1b",
 };
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 function MyApp({ Component, pageProps }) {
     return (
