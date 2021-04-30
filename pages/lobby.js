@@ -1,6 +1,7 @@
 import { useCollection } from "react-firebase-hooks/firestore";
 import firebase from "firebase";
 import { useRouter } from "next/router";
+import React from "react";
 
 export default function Lobby() {
     const [users, usersLoading] = useCollection(firebase.firestore().collection("/users"));
@@ -16,7 +17,9 @@ export default function Lobby() {
             <div className="flex-fill">
                 {(usersLoading && <span className="spinner spinner-lg" />) ||
                     users.docs.map((user) => (
-                        <h2 className="d-flex justify-content-center py-5 text-light-">{user.id}</h2>
+                        <h2 key={user.id} className="d-flex justify-content-center py-5 text-light-">
+                            {user.id}
+                        </h2>
                     ))}
             </div>
 
